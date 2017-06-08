@@ -10,11 +10,11 @@ with open('README.md') as f:
 
 setup(
     name='BeautifulDiscord',
-    author='leovoel',
-    url='https://github.com/leovoel/BeautifulDiscord',
+    author='leovoel, Ura Yukimitsu',
+    url='https://github.com/UraKn0xl/BeautifulDiscord',
     version='0.1.0',
     license='MIT',
-    description='Adds custom CSS support to Discord.',
+    description='Adds custom CSS and JS support to Discord.',
     long_description=readme,
     packages=find_packages(),
     install_requires=requirements,
