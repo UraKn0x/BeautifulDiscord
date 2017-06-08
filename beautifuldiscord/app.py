@@ -257,7 +257,7 @@ def main():
             with open('./app/index.js', 'r', encoding='utf-8') as f:
                 entire_thing = f.read()
 
-            entire_thing = entire_thing.replace("mainWindow.webContents.on('dom-ready', function () {});", css_reload_script)
+            entire_thing = entire_thing.replace("mainWindow.webContents.on('dom-ready', function () {});", reload_script)
 
             with open('./app/index.js', 'w', encoding='utf-8') as f:
                 f.write(entire_thing)
