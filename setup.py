@@ -11,7 +11,7 @@ with open('README.md') as f:
 setup(
     name='BeautifulDiscord',
     author='leovoel, Ura Yukimitsu',
-    url='https://github.com/UraKn0xl/BeautifulDiscord',
+    url='https://github.com/UraYukimitsu/BeautifulDiscord',
     version='0.1.0',
     license='MIT',
     description='Adds custom CSS and JS support to Discord.',

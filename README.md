@@ -21,7 +21,7 @@ The script works by scanning the active processes and looking for the Discord on
 (yes, this also means you can fool the program into trying to apply this to some random program named Discord)
 
 ```
-$ beautifuldiscord --css C:\mystuff\myown.css --js C:\mystuff\myown.js
+$ beautifuldiscord --css C:\mystuff\myown.css --js C:\mystuff\myown.js --node C:\mystuff\node_modules
 0: Found DiscordPTB.exe
 1: Found DiscordCanary.exe
 Discord executable to use (number): 1
@@ -55,7 +55,7 @@ install it as a script that you can run from anywhere.
 ## Installing
 
 ```
-python3 -m pip install -U https://github.com/UraKn0x/BeautifulDiscord/archive/master.zip
+python3 -m pip install -U https://github.com/UraYukimitsu/BeautifulDiscord/archive/master.zip
 ```
 
 Usage of a virtual environment is recommended, to not pollute your global package space.
