@@ -7,6 +7,7 @@ import textwrap
 import subprocess
 import psutil
 import sys
+from distutils.dir_util import copy_tree
 from collections import namedtuple
 from beautifuldiscord.asar import Asar
 
@@ -47,6 +48,7 @@ Discord will close and then be relaunched when the tool completes.
     parser = argparse.ArgumentParser(description=description.strip())
     parser.add_argument('--css', metavar='file', help='Location of the CSS file to watch')
     parser.add_argument('--js', metavar='file', help='Location of the JS file to watch')
+    parser.add_argument('--node', metavar='dir', help='Direcotry containing Node modules callable from the JS script')
     parser.add_argument('--revert', action='store_true', help='Reverts any changes made to Discord (does not delete CSS)')
     args = parser.parse_args()
     return args
@@ -129,6 +131,9 @@ def main():
         args.js = os.path.abspath(args.js)
     else:
         args.js = os.path.join(discord.resources_path, 'discord-custom.js')
+
+    if args.node:
+        copy_tree(os.path.abspath(args.node), os.path.join(argsdiscord.resources_path, 'app', 'node_modules')
 
     os.chdir(discord.resources_path)
 
