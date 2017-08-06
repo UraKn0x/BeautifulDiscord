@@ -133,7 +133,7 @@ def main():
         args.js = os.path.join(discord.resources_path, 'discord-custom.js')
 
     if args.node:
-        copy_tree(os.path.abspath(args.node), os.path.join(argsdiscord.resources_path, 'app', 'node_modules')
+        copy_tree(os.path.abspath(args.node), os.path.join(argsdiscord.resources_path, 'app', 'node_modules'))
 
     os.chdir(discord.resources_path)
 
