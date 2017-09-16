@@ -48,8 +48,9 @@ Discord will close and then be relaunched when the tool completes.
     parser = argparse.ArgumentParser(description=description.strip())
     parser.add_argument('--css', metavar='file', help='Location of the CSS file to watch')
     parser.add_argument('--js', metavar='file', help='Location of the JS file to watch')
-    parser.add_argument('--node', metavar='dir', help='Direcotry containing Node modules callable from the JS script')
-    parser.add_argument('--revert', action='store_true', help='Reverts any changes made to Discord (does not delete CSS)')
+    parser.add_argument('--node', metavar='dir', help='Directory containing Node modules callable from the JS script')
+    parser.add_argument('--nodenoreload', metavar='dir', help='Adds Node modules without reloading Discord (has the priority over any other switch)')
+    parser.add_argument('--revert', action='store_true', help='Reverts any changes made to Discord (does not delete CSS or JS files)')
     args = parser.parse_args()
     return args
 
@@ -134,6 +135,10 @@ def main():
 
     if args.node:
         copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
+
+    if args.nodenoreload:
+        copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
+        return
 
     os.chdir(discord.resources_path)
 
