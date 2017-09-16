@@ -137,7 +137,7 @@ def main():
         copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
 
     if args.nodenoreload:
-        copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
+        copy_tree(os.path.abspath(args.nodenoreload), os.path.join(discord.resources_path, 'app', 'node_modules'))
         return
 
     os.chdir(discord.resources_path)
