@@ -133,9 +133,6 @@ def main():
     else:
         args.js = os.path.join(discord.resources_path, 'discord-custom.js')
 
-    if args.node:
-        copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
-
     if args.nodenoreload:
         copy_tree(os.path.abspath(args.nodenoreload), os.path.join(discord.resources_path, 'app', 'node_modules'))
         return
@@ -279,6 +276,8 @@ def main():
                 "which will be reloaded whenever they're saved.\n" +
                 '\nRelaunching Discord now...'
             )
+            if args.node:
+                copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
 
     discord.launch()
 
