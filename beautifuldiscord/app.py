@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import shutil
+from distutils.dir_util import copy_tree
+from collections import namedtuple
 import argparse
 import textwrap
 import subprocess
 import psutil
-import sys
-from distutils.dir_util import copy_tree
-from collections import namedtuple
+import zipfile
 from beautifuldiscord.asar import Asar
 
 
@@ -261,21 +262,28 @@ def main():
                 });
             """ % injection_script_path)
 
+            use_zip = False
             try:
-                with open('./app/app_bootstrap/index.js', 'r', encoding='utf-8') as f:
-                    entire_thing = f.read()
-            except FileNotFoundError:
                 with open('./app/index.js', 'r', encoding='utf-8') as f:
                     entire_thing = f.read()
+            except FileNotFoundError:
+                use_zip = True
+                with zipfile.ZipFile("./bootstrap/discord_desktop_core.zip","r") as zip_ref:
+                    os.mkdir("./bootstrap/core")
+                    zip_ref.extractall("./bootstrap/core")
+                    with open('./bootstrap/core/app/mainScreen.js', 'r', encoding='utf-8') as f:
+                        entire_thing = f.read()
 
             entire_thing = entire_thing.replace("mainWindow.webContents.on('dom-ready', function () {});", reload_script)
 
-            try:
-                with open('./app/app_bootstrap/index.js', 'w', encoding='utf-8') as f:
-                    f.write(entire_thing)
-            except FileNotFoundError:
+            if not use_zip:
                 with open('./app/index.js', 'w', encoding='utf-8') as f:
                     f.write(entire_thing)
+            else:
+                shutil.make_archive('./core_temp.zip', 'zip', './bootstrap/core')
+                os.remove('./bootstrap/discord_desktop_core.zip')
+                shutil.move('./core_temp.zip', './bootstrap/discord_desktop_core.zip')
+                shutil.rmtree('./bootstrap/core')
 
             print(
                 '\nDone!\n' +
