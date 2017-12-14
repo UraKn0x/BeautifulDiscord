@@ -9,7 +9,6 @@ import argparse
 import textwrap
 import subprocess
 import psutil
-import zipfile
 from beautifuldiscord.asar import Asar
 
 
@@ -65,24 +64,18 @@ def discord_process():
         else:
             if exe.startswith('Discord') and not exe.endswith('Helper'):
                 entry = executables.get(exe)
-
                 if entry is None:
                     entry = executables[exe] = DiscordProcess(path=path, exe=exe, processes=[])
-
                 entry.processes.append(proc)
-
     if len(executables) == 0:
         raise RuntimeError('Could not find Discord executable.')
-
     if len(executables) == 1:
         r = executables.popitem()
         print('Found {0.exe} under {0.path}'.format(r[1]))
         return r[1]
-
     lookup = list(executables)
     for index, exe in enumerate(lookup):
         print('%s: Found %s' % (index, exe))
-
     while True:
         index = input("Discord executable to use (number): ")
         try:
@@ -262,28 +255,35 @@ def main():
                 });
             """ % injection_script_path)
 
-            use_zip = False
+            use_index = True
             try:
                 with open('./app/index.js', 'r', encoding='utf-8') as f:
                     entire_thing = f.read()
             except FileNotFoundError:
-                use_zip = True
-                with zipfile.ZipFile("./bootstrap/discord_desktop_core.zip","r") as zip_ref:
-                    os.mkdir("./bootstrap/core")
-                    zip_ref.extractall("./bootstrap/core")
-                    with open('./bootstrap/core/app/mainScreen.js', 'r', encoding='utf-8') as f:
-                        entire_thing = f.read()
+                use_index = False
+                if sys.platform.startswith('linux'):
+                    user_data_root = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.environ.get('HOME'), '.config'))
+                elif sys.platform.startswith('win'):
+                    user_data_root = os.environ.get('APPDATA')
+                elif sys.platform.startswith('darwin'):
+                    user_data_root = os.path.join(os.environ.get('HOME'), 'Library', 'Application Support')
+                else:
+                    print('Unknown/unsupported OS')
+                    return False
+                user_data_root = os.path.join(user_data_root, os.path.basename(os.path.dirname(discord.path)).lower(), os.path.basename(discord.path).replace('app-', ''))
+                main_screen_js = os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'app', 'mainScreen.js')
+                with open(main_screen_js, 'r', encoding='utf-8') as f:
+                    entire_thing = f.read()
+
 
             entire_thing = entire_thing.replace("mainWindow.webContents.on('dom-ready', function () {});", reload_script)
 
-            if not use_zip:
+            if use_index:
                 with open('./app/index.js', 'w', encoding='utf-8') as f:
                     f.write(entire_thing)
             else:
-                shutil.make_archive('./core_temp', 'zip', './bootstrap/core')
-                os.remove('./bootstrap/discord_desktop_core.zip')
-                shutil.move('./core_temp.zip', './bootstrap/discord_desktop_core.zip')
-                shutil.rmtree('./bootstrap/core')
+                with open(main_screen_js, 'w', encoding='utf-8') as f:
+                    f.write(entire_thing)
 
             print(
                 '\nDone!\n' +
