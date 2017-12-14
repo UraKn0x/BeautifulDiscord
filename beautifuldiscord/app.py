@@ -250,7 +250,7 @@ def main():
             reload_script = textwrap.dedent("""\
                 mainWindow.webContents.on('dom-ready', function () {
                   mainWindow.webContents.executeJavaScript(
-                    _fs2.default.readFileSync('%s', 'utf-8')
+                    require('fs').readFileSync('%s', 'utf-8')
                   );
                 });
             """ % injection_script_path)
