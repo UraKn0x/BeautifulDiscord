@@ -280,7 +280,7 @@ def main():
                 with open('./app/index.js', 'w', encoding='utf-8') as f:
                     f.write(entire_thing)
             else:
-                shutil.make_archive('./core_temp.zip', 'zip', './bootstrap/core')
+                shutil.make_archive('./core_temp', 'zip', './bootstrap/core')
                 os.remove('./bootstrap/discord_desktop_core.zip')
                 shutil.move('./core_temp.zip', './bootstrap/discord_desktop_core.zip')
                 shutil.rmtree('./bootstrap/core')
