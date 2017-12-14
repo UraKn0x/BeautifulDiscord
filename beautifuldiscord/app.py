@@ -117,6 +117,17 @@ def main():
         print(str(e))
         return
 
+    if sys.platform.startswith('linux'):
+        user_data_root = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.environ.get('HOME'), '.config'))
+    elif sys.platform.startswith('win'):
+        user_data_root = os.environ.get('APPDATA')
+    elif sys.platform.startswith('darwin'):
+        user_data_root = os.path.join(os.environ.get('HOME'), 'Library', 'Application Support')
+    else:
+        print('Unknown/unsupported OS')
+        return False
+    user_data_root = os.path.join(user_data_root, os.path.basename(os.path.dirname(discord.path)).lower(), os.path.basename(discord.path).replace('app-', ''))
+
     if args.css:
         args.css = os.path.abspath(args.css)
     else:
@@ -128,7 +139,7 @@ def main():
         args.js = os.path.join(discord.resources_path, 'discord-custom.js')
 
     if args.nodenoreload:
-        copy_tree(os.path.abspath(args.nodenoreload), os.path.join(discord.resources_path, 'app', 'node_modules'))
+        copy_tree(os.path.abspath(args.node), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
         return
 
     os.chdir(discord.resources_path)
@@ -261,16 +272,6 @@ def main():
                     entire_thing = f.read()
             except FileNotFoundError:
                 use_index = False
-                if sys.platform.startswith('linux'):
-                    user_data_root = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.environ.get('HOME'), '.config'))
-                elif sys.platform.startswith('win'):
-                    user_data_root = os.environ.get('APPDATA')
-                elif sys.platform.startswith('darwin'):
-                    user_data_root = os.path.join(os.environ.get('HOME'), 'Library', 'Application Support')
-                else:
-                    print('Unknown/unsupported OS')
-                    return False
-                user_data_root = os.path.join(user_data_root, os.path.basename(os.path.dirname(discord.path)).lower(), os.path.basename(discord.path).replace('app-', ''))
                 main_screen_js = os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'app', 'mainScreen.js')
                 with open(main_screen_js, 'r', encoding='utf-8') as f:
                     entire_thing = f.read()
@@ -293,7 +294,7 @@ def main():
                 '\nRelaunching Discord now...'
             )
             if args.node:
-                copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
+                copy_tree(os.path.abspath(args.node), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
 
     discord.launch()
 
