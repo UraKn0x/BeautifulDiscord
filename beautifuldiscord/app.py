@@ -49,7 +49,9 @@ Discord will close and then be relaunched when the tool completes.
     parser.add_argument('--css', metavar='file', help='Location of the CSS file to watch')
     parser.add_argument('--js', metavar='file', help='Location of the JS file to watch')
     parser.add_argument('--node', metavar='dir', help='Directory containing Node modules callable from the JS script')
+    parser.add_argument('--nodenew', metavar='dir', help='Directory containing Node modules callable from the JS script - uses the alternate path, use this if the other one doesn\'t work')
     parser.add_argument('--nodenoreload', metavar='dir', help='Adds Node modules without reloading Discord (has the priority over any other switch)')
+    parser.add_argument('--nodenoreloadnew', metavar='dir', help='Adds Node modules without reloading Discord (has the priority over any other switch) - uses the alternate path, use this if the other one doesn\'t work')
     parser.add_argument('--revert', action='store_true', help='Reverts any changes made to Discord (does not delete CSS or JS files)')
     args = parser.parse_args()
     return args
@@ -139,6 +141,9 @@ def main():
         args.js = os.path.join(discord.resources_path, 'discord-custom.js')
 
     if args.nodenoreload:
+        copy_tree(os.path.abspath(args.nodenoreload), os.path.join(discord.resources_path, 'app', 'node_modules'))
+        return
+    if args.nodenoreloadnew:
         copy_tree(os.path.abspath(args.node), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
         return
 
