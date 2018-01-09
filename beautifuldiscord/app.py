@@ -46,6 +46,7 @@ Discord has to be open for this to work. When this tool is ran,
 Discord will close and then be relaunched when the tool completes.
 """
     parser = argparse.ArgumentParser(description=description.strip())
+    parser.add_argument('--legacy', action='store_true', help='This script is now deprecated, please see https://github.com/UraYukimitsu/DiscordBootstrap - if you wish to use it anyway, passing this switch is necessary.')
     parser.add_argument('--css', metavar='file', help='Location of the CSS file to watch')
     parser.add_argument('--js', metavar='file', help='Location of the JS file to watch')
     parser.add_argument('--node', metavar='dir', help='Directory containing Node modules callable from the JS script')
@@ -113,6 +114,10 @@ def extract_asar():
 
 def main():
     args = parse_args()
+    if not args.legacy:
+        print('This script is now deprecated, please see https://github.com/UraYukimitsu/DiscordBootstrap\nIf you wish to use it anyway, passing the --legacy switch is necessary.')
+        return
+    
     try:
         discord = discord_process()
     except Exception as e:
@@ -144,7 +149,7 @@ def main():
         copy_tree(os.path.abspath(args.nodenoreload), os.path.join(discord.resources_path, 'app', 'node_modules'))
         return
     if args.nodenoreloadnew:
-        copy_tree(os.path.abspath(args.node), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
+        copy_tree(os.path.abspath(args.nodenoreloadnew), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
         return
 
     os.chdir(discord.resources_path)
@@ -298,8 +303,10 @@ def main():
                 "which will be reloaded whenever they're saved.\n" +
                 '\nRelaunching Discord now...'
             )
+            if args.nodenoreload:
+                copy_tree(os.path.abspath(args.node), os.path.join(discord.resources_path, 'app', 'node_modules'))
             if args.node:
-                copy_tree(os.path.abspath(args.node), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
+                copy_tree(os.path.abspath(args.nodenew), os.path.join(user_data_root, 'modules', 'discord_desktop_core', 'node_modules'))
 
     discord.launch()
 
