@@ -1,3 +1,9 @@
+WARNING
+=======
+THIS REPOSITORY WILL NO LONGER BE UPDATED!
+FOR ALL FUTURE UPDATES, PLEASE SEE 
+https://github.com/UraYukimitsu/DiscordBootstrap
+
 BeautifulDiscord
 ================
 
